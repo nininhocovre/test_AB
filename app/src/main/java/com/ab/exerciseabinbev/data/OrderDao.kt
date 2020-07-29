@@ -14,5 +14,5 @@ interface OrderDao {
 
     @Transaction
     @Query("SELECT * FROM orders_table")
-    fun getAllOrders(): List<OrderWithProduct>
+    fun getAllOrders(): LiveData<List<OrderWithProduct>>
 }
