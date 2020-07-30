@@ -5,5 +5,5 @@ import kotlinx.coroutines.CoroutineScope
 
 class OrderRepository(val orderDao: OrderDao) {
 
-    val lastOrder: LiveData<OrderWithProduct> = orderDao.getOrderById(10)
+    val lastOrder: LiveData<List<OrderWithProduct>> = orderDao.getOrderById(10)
 }

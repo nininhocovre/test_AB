@@ -10,7 +10,7 @@ interface OrderDao {
 
     @Transaction
     @Query("SELECT * FROM orders_table WHERE order_id == :id")
-    fun getOrderById(id: Int): LiveData<OrderWithProduct>
+    fun getOrderById(id: Int): LiveData<List<OrderWithProduct>>
 
     @Transaction
     @Query("SELECT * FROM orders_table")
