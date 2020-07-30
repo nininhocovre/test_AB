@@ -3,6 +3,7 @@ package com.ab.exerciseabinbev.ui.main
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -26,6 +27,7 @@ class OrderRecyclerViewAdapter(val viewModel: MainViewModel) : RecyclerView.Adap
         val quantity: EditText
         val plusButton: ImageView
         val minusButton: ImageView
+        val addButton: Button
 
         init {
             image = itemView.findViewById<ImageView>(R.id.product_image)
@@ -36,6 +38,7 @@ class OrderRecyclerViewAdapter(val viewModel: MainViewModel) : RecyclerView.Adap
             quantity = itemView.findViewById<EditText>(R.id.quantity_edit)
             plusButton = itemView.findViewById<ImageView>(R.id.add_image)
             minusButton = itemView.findViewById<ImageView>(R.id.sub_image)
+            addButton = itemView.findViewById<Button>(R.id.add_button)
         }
     }
 
@@ -66,6 +69,16 @@ class OrderRecyclerViewAdapter(val viewModel: MainViewModel) : RecyclerView.Adap
         }
         holder.minusButton.setOnClickListener {
             viewModel.adjustQuantity(thisOrder, -1)
+        }
+        if (thisOrder.order.purchased) {
+            holder.addButton.text = ""
+            holder.addButton.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.baseline_check_24, 0, 0, 0)
+        } else {
+            holder.addButton.text = "Add"
+            holder.addButton.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
+        }
+        holder.addButton.setOnClickListener {
+            viewModel.onAddButtonClicked(thisOrder)
         }
     }
 

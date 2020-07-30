@@ -31,10 +31,10 @@ public abstract class MainDatabase : RoomDatabase() {
                     productDao.insert(Product(103, "Pepsi Lata", "350ml", "1 unidad", 13.20f))
 
                     val orderDao = database.orderDao()
-                    orderDao.insert(Order(10, 100, 5))
-                    orderDao.insert(Order(10, 101, 1))
-                    orderDao.insert(Order(10, 102, 1))
-                    orderDao.insert(Order(10, 103, 8))
+                    orderDao.insert(Order(10, 100, 5, false))
+                    orderDao.insert(Order(10, 101, 1, false))
+                    orderDao.insert(Order(10, 102, 1, false))
+                    orderDao.insert(Order(10, 103, 8, false))
                 }
             }
         }

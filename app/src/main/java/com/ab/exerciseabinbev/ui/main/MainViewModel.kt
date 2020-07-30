@@ -23,13 +23,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun quantityChanged(orderWithProduct: OrderWithProduct, newValue: Int) {
         viewModelScope.launch {
-            orderRepository.quantityChanged(orderWithProduct, newValue)
+            orderRepository.quantityChanged(orderWithProduct.order, newValue)
         }
     }
 
     fun adjustQuantity(orderWithProduct: OrderWithProduct, diff: Int) {
         viewModelScope.launch {
-            orderRepository.adjustQuantity(orderWithProduct, diff)
+            orderRepository.adjustQuantity(orderWithProduct.order, diff)
+        }
+    }
+
+    fun onAddButtonClicked(orderWithProduct: OrderWithProduct) {
+        viewModelScope.launch {
+            orderRepository.onAddedChanged(orderWithProduct.order)
         }
     }
 
