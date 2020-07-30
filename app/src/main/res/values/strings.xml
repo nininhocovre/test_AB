@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Exercise AB Inbev</string>
+    <string name="app_name">Pedidos Fácil</string>
+    <string name="add_button_text">Add</string>
 </resources>

@@ -18,6 +18,7 @@ class OrderRecyclerViewAdapter(val viewModel: MainViewModel) : RecyclerView.Adap
     private var orders: List<OrderWithProduct> = ArrayList()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var productId: Int = 0
         // TODO: fetch image from server
         val image: ImageView
         val name: TextView
@@ -53,33 +54,53 @@ class OrderRecyclerViewAdapter(val viewModel: MainViewModel) : RecyclerView.Adap
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val thisOrder = orders[position]
-
+        holder.productId = thisOrder.product.id
         holder.name.text = thisOrder.product.name
         holder.size.text = thisOrder.product.size
         holder.packageSize.text = thisOrder.product.packageSize
         holder.price.text = String.format("$%.2f", thisOrder.product.value)
         holder.quantity.setText(thisOrder.order.quantity.toString())
-        // TODO: fix quantity changing on other items
         holder.quantity.doAfterTextChanged {
-            val newValue: Int = it?.toString()?.toInt() ?: thisOrder.order.quantity
-            viewModel.quantityChanged(thisOrder, newValue)
+            val order = getOrder(holder.productId)
+            if (order != null) {
+                val newValue: Int = it?.toString()?.toInt() ?: order.order.quantity
+                viewModel.quantityChanged(order, newValue)
+            }
         }
         holder.plusButton.setOnClickListener {
-            viewModel.adjustQuantity(thisOrder, 1)
+            val order = getOrder(holder.productId)
+            if (order != null) {
+                viewModel.adjustQuantity(order, 1)
+            }
         }
         holder.minusButton.setOnClickListener {
-            viewModel.adjustQuantity(thisOrder, -1)
+            val order = getOrder(holder.productId)
+            if (order != null) {
+                viewModel.adjustQuantity(order, -1)
+            }
         }
         if (thisOrder.order.purchased) {
             holder.addButton.text = ""
             holder.addButton.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.baseline_check_24, 0, 0, 0)
         } else {
-            holder.addButton.text = "Add"
+            holder.addButton.text = holder.addButton.resources.getText(R.string.add_button_text)
             holder.addButton.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
         }
         holder.addButton.setOnClickListener {
-            viewModel.onAddButtonClicked(thisOrder)
+            val order = getOrder(holder.productId)
+            if (order != null) {
+                viewModel.onAddButtonClicked(order)
+            }
         }
+    }
+
+    private fun getOrder(productId: Int) : OrderWithProduct? {
+        orders.forEach {
+            if (it.product.id == productId) {
+                return it
+            }
+        }
+        return null
     }
 
     fun setOrder(orderList: List<OrderWithProduct>) {
