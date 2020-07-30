@@ -17,8 +17,6 @@ class OrderRecyclerViewAdapter(val viewModel: MainViewModel) : RecyclerView.Adap
     private var orders: List<OrderWithProduct> = ArrayList()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var order: OrderWithProduct? = null
-
         // TODO: fetch image from server
         val image: ImageView
         val name: TextView
@@ -51,28 +49,30 @@ class OrderRecyclerViewAdapter(val viewModel: MainViewModel) : RecyclerView.Adap
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.order = orders[position]
-        holder.order?.let { order ->
-            holder.name.text = order.product.name
-            holder.size.text = order.product.size
-            holder.packageSize.text = order.product.packageSize
-            holder.price.text = String.format("$%.2f", order.product.value)
-            holder.quantity.setText(order.order.quantity.toString())
-            holder.quantity.doAfterTextChanged {
-                val newValue: Int = it?.toString()?.toInt() ?: order.order.quantity
-                viewModel.quantityChanged(order, newValue)
-            }
-            holder.plusButton.setOnClickListener {
-                viewModel.adjustQuantity(order, 1)
-            }
-            holder.minusButton.setOnClickListener {
-                viewModel.adjustQuantity(order, -1)
-            }
+        val thisOrder = orders[position]
+
+        holder.name.text = thisOrder.product.name
+        holder.size.text = thisOrder.product.size
+        holder.packageSize.text = thisOrder.product.packageSize
+        holder.price.text = String.format("$%.2f", thisOrder.product.value)
+        holder.quantity.setText(thisOrder.order.quantity.toString())
+        // TODO: fix quantity changing on other items
+        holder.quantity.doAfterTextChanged {
+            val newValue: Int = it?.toString()?.toInt() ?: thisOrder.order.quantity
+            viewModel.quantityChanged(thisOrder, newValue)
+        }
+        holder.plusButton.setOnClickListener {
+            viewModel.adjustQuantity(thisOrder, 1)
+        }
+        holder.minusButton.setOnClickListener {
+            viewModel.adjustQuantity(thisOrder, -1)
         }
     }
 
     fun setOrder(orderList: List<OrderWithProduct>) {
-        this.orders = orderList
-        notifyDataSetChanged()
+        if (this.orders != orderList) {
+            this.orders = orderList
+            notifyDataSetChanged()
+        }
     }
 }
